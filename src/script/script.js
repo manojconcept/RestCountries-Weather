@@ -45,10 +45,11 @@ getDataRest
           <h5 class="card-title">Region: ${data[i].region}</h5>
           <h5 class="card-title">Capital: ${data[i].cioc}</h5>
           <h5 class="card-title">Capital: ${latLng}</h5>
-          <button id="weatherButton" onClick="${myCall(latLng)}" type="button"class="btn btn-primary">Click for Weather</button>
+          <button id="weatherButton" type="button"class="btn btn-primary">Click for Weather</button>
         </div>
       `;
       carBDiv.appendChild(cardDiv);
+      
     }
 
 
