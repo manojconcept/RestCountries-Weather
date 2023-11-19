@@ -1,62 +1,75 @@
 console.log("Linked");
+let mainDiv = document.createElement("div");
+let secDiv = document.createElement("div");
+secDiv.classList.add("row", "g-3", "mt-2");
+mainDiv.classList.add("container");
+document.body.append(mainDiv);
+mainDiv.append(secDiv);
 
-// --------------------------> createElement
-let documentTitle = document.createElement('title');
-document.head.append(documentTitle);
-let textElement = document.createTextNode("Rest Countries & Weather using fetch API");
-documentTitle.appendChild(textElement);
+let urlone = fetch("https://restcountries.com/v3.1/all");
 
-// --------------------------> body
-let bodyDiv = document.createElement("div");
-document.body.append(bodyDiv);
-bodyDiv.classList.add("container", "g-4");
+urlone
+    .then((res) => {
+        console.log(res);
+        return res.json();
+    })
+    .catch(reason => console.error(reason))
+    .then((restDat) => {
+        restDat.sort((a, b) => {
+            if (a.name["common"] < b.name["common"]) {
+                return -1;
+            }
+        })
+        console.log(restDat);
 
-let carBDiv = document.createElement("div");
-bodyDiv.append(carBDiv);
-carBDiv.classList.add("row", "col-1", "g-4", "col-sm-12", "mt-5");
+        let cardData = restDat.map((restDat) => {
+            return `<div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-header text-center">${restDat.name.common}</h5>
+                        <div class="i-img ">
+                            <img class="card-img-top round" src="${restDat.flags.svg}" alt="${restDat.flags.alt}">
+                        </div>
+                        <h6 class="text-center ioi">Region: ${restDat.region}</h6>
+                        <h6 class="text-center">Country code: ${restDat.cca3}</h6>
+                        <h6 class="text-center">Capital: ${restDat.capital}</h6>
+                        <div class="d-grid d-md-flex justify-content-md-center ioi">
+                            <button class="btn btn-primary" data-lat="${restDat.capitalInfo ? restDat.capitalInfo.latlng?.[0] : 'N/A'}" data-lon="${restDat.capitalInfo ? restDat.capitalInfo.latlng?.[1] : 'N/A'}">Click for Weather</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
+        
 
-let url1 = "https://restcountries.com/v3.1/all";
+        secDiv.innerHTML = cardData;
 
-let getDataRest = fetch(url1);
-
-console.log(getDataRest);
-getDataRest
-  .then((response) => response.json())
-  .catch((reason) => console.error("Error:", reason))
-  .then((data) => {
-    
-    data = data.sort((a, b) => {
-      if (a.name.common < b.name.common) return -1;
+        // Add event listener for weather button click
+        secDiv.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', () => {
+                const lat = button.dataset.lat;
+                const lon = button.dataset.lon;
+                if (lat && lon && lat !== 'N/A' && lon !== 'N/A') {
+                    getWeatherData(lat, lon);
+                } else {
+                    alert('Weather information not available for this country.');
+                }
+            });
+        });
     });
 
-    console.log(data[0].capitalInfo.latlng[0]) 
-   
-    for (let i = 0; i < data.length; i++) {
-      let cardDiv = document.createElement("div");
-      cardDiv.classList.add("card", "col-3", "mt-2");
-      let imageUrl = data[i].flags.svg; 
-      let imageUrlAlt = data[i].flags.alt;
-      let latLng = data[i].capitalInfo.latlng;
-      cardDiv.innerHTML = `
-        <div class="card-header">${data[i].name.common}</div>
-        <div class="card-body">
-          <img class="card-img-top" src="${imageUrl}" alt="Flag of ${imageUrlAlt}">
-          <h5 class="card-title">${data[i].name.common}</h5>
-          <h5 class="card-title">Region: ${data[i].region}</h5>
-          <h5 class="card-title">Capital: ${data[i].cioc}</h5>
-          <h5 class="card-title">Capital: ${latLng}</h5>
-          <button id="weatherButton" type="button"class="btn btn-primary">Click for Weather</button>
-        </div>
-      `;
-      carBDiv.appendChild(cardDiv);
-      
-    }
+// Function to fetch weather data
+function getWeatherData(lat, lon) {
+    const apiKey = '2a79d3bff72b9125899d37ba4d908283';
+    // const exclude = "hourly,daily";
+    const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
-
-    
-   
-
-
-
-  
-  });
+    fetch(weatherApiUrl)
+        .then(response => response.json())
+        .then(weatherData => {
+            console.log('Weather Data:', weatherData);
+            // Handle the weather data here (update the UI, display a modal, etc.)
+            alert(`Weather in this location: ${weatherData.current.weather[0].description}`);
+        })
+        .catch(error => console.error('Error fetching weather data:', error));
+}
