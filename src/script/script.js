@@ -34,7 +34,7 @@ urlone
                         <h6 class="text-center">Country code: ${restDat.cca3}</h6>
                         <h6 class="text-center">Capital: ${restDat.capital}</h6>
                         <div class="d-grid d-md-flex justify-content-md-center ioi">
-                            <button class="btn btn-primary" data-lat="${restDat.capitalInfo ? restDat.capitalInfo.latlng?.[0] : 'N/A'}" data-lon="${restDat.capitalInfo ? restDat.capitalInfo.latlng?.[1] : 'N/A'}">Click for Weather</button>
+                            <button class="btn btn-primary fsont" data-lat="${restDat.capitalInfo ? restDat.capitalInfo.latlng?.[0] : 'N/A'}" data-lon="${restDat.capitalInfo ? restDat.capitalInfo.latlng?.[1] : 'N/A'}"><i class="bi bi-person-walking"></i> Click for Weather</button>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@ urlone
 
 // Function to fetch weather data
 function getWeatherData(lat, lon) {
-    const apiKey = '2a79d3bff72b9125899d37ba4d908283';
+    const apiKey = '4176aa73331ea5ac36594ebadc5aa2a8';
     // const exclude = "hourly,daily";
     const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
