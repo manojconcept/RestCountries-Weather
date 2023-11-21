@@ -62,7 +62,7 @@ urlone
 function getWeatherData(lat, lon) {
     const apiKey = '4176aa73331ea5ac36594ebadc5aa2a8';
     // const exclude = "hourly,daily";
-    const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    const weatherApiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
     fetch(weatherApiUrl)
         .then(response => response.json())
